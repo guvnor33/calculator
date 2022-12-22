@@ -1,0 +1,83 @@
+html {
+    font-size: 20px;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgray;
+    /* z-index: 5; */
+  }
+
+.wrapper {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    width: 270px;
+    border-radius: 8px;
+
+    background-color: darkslategrey;
+
+}
+.display-container {
+    /* padding: 5px; */
+    margin: 5px;
+    margin-bottom: 10px;
+    height: 70px;
+    width: 250px;
+    border-radius: 6px;
+
+    
+    background-color: rgb(75, 94, 94);
+}
+.btn {
+    padding-bottom: 3px;
+    padding-left: 7px;
+    background: #fafafa;
+    border-color: #313030;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 4px;
+    width: 50px;
+    height: 50px;
+
+    /* height: 35px;
+    width: 35px;
+    padding: 10px;
+    border-radius: 4px; */
+    background-color: #636263;
+    
+}
+
+/* Add a light grey background on mouse-over */
+.btn:hover {
+    cursor: pointer;
+    background-color: #6e6c6e;
+  }
+  .btn:active {
+    transform: scale(0.93, 0.93);
+    background-color: #8f8d8f;
+
+
+  }
+.button-container {
+    display: grid;
+    /* margin:auto; */
+    grid-template-columns: repeat(5, auto);
+    background-color: rgb(74, 85, 85);
+
+} 
