@@ -1,3 +1,8 @@
+@font-face {
+    font-family: digital;
+    src: url(fonts/digital-7/digital-7.ttf);
+  }
+
 html {
     font-size: 20px;
 }
@@ -6,7 +11,6 @@ html {
     margin: 0;
     padding: 0;
     font-family: sans-serif;
-
 }
 
 body {
@@ -29,20 +33,33 @@ body {
     height: 300px;
     width: 270px;
     border-radius: 8px;
-
     background-color: darkslategrey;
-
 }
+
 .display-container {
-    /* padding: 5px; */
     margin: 5px;
     margin-bottom: 10px;
     height: 70px;
     width: 250px;
     border-radius: 6px;
-
-    
-    background-color: rgb(75, 94, 94);
+    font-family: digital;
+    background-color: rgb(89, 112, 112);
+}
+.upper-display {
+    margin: 5px;
+    font-size: 30px;
+}
+.lower-display {
+    padding-top: 5px;
+    margin: 5px;
+    display: flex;
+    width: 240px;
+    height: 35px;
+    /* background-color: aqua; */
+    justify-content: end;
+    /* align-items: flex-end; */
+    font-family: digital;
+    font-size: 40px;
 }
 .btn {
     padding-bottom: 3px;
@@ -54,16 +71,9 @@ body {
     border-radius: 4px;
     width: 50px;
     height: 50px;
-
-    /* height: 35px;
-    width: 35px;
-    padding: 10px;
-    border-radius: 4px; */
     background-color: #636263;
-    
 }
 
-/* Add a light grey background on mouse-over */
 .btn:hover {
     cursor: pointer;
     background-color: #6e6c6e;
@@ -71,13 +81,10 @@ body {
   .btn:active {
     transform: scale(0.93, 0.93);
     background-color: #8f8d8f;
-
-
   }
 .button-container {
     display: grid;
     /* margin:auto; */
     grid-template-columns: repeat(5, auto);
     background-color: rgb(74, 85, 85);
-
 } 
