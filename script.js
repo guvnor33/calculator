@@ -168,6 +168,7 @@ function performOp(opStr) {
   }
   validateDisplays(upperDisplay,lowerDisplay);
 }
+
 function validateDisplays(ud, ld) {
   let udStr = ud.textContent;
   let ldStr = ld.textContent;
