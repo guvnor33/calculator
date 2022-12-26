@@ -23,9 +23,11 @@ function operate(operator,num1,num2) {
   }
 }
 
-function getNumbersAndOperator(str) {
+function getNumbersAndOperator_old(str) {
+  console.log('getNumbersAndOperator called with ' + str);
   // Use a regular expression with capture groups to extract the two numbers and the operator
   let result = str.match(/(-?\.?\d+)(e[\+\-]?\d+)?([\+\-\*\/]|--|\/-)(-?\.?\d+)(e[\+\-]?\d+)?/);
+  // let result = str.match(/0?(-?\.\d+)(e[\+\-]?\d+)?([\+\-\*\/]|--|\/-)(0?-?\.\d+)(e[\+\-]?\d+)?/);
   if (result) {
     // Convert the extracted numbers to decimals
     let num1 = parseFloat(result[1] + result[2]);
@@ -67,6 +69,51 @@ function getNumbersAndOperator(str) {
   }
 }
 
+function getNumbersAndOperator(str) {
+  console.log('getNumbersAndOperator called with ' + str);
+  // Use a regular expression with capture groups to extract the two numbers and the operator
+  let result = str.match(/(0?(-?\d+(\.\d+)?)|(-?\.\d+))(e[\+\-]?\d+)?([\+\-\*\/]|--|\/-|\+-|\*-)(0?-?\d+(\.\d+)?|(-?\.\d+))(e[\+\-]?\d+)?/);
+  if (result) {
+    // Convert the extracted numbers to decimals
+    let num1 = parseFloat(result[1] + result[4] + result[5]);
+    let num2 = parseFloat(result[7] + result[10] + result[11]);
+    
+    // If the operator is "--", convert it to "-", and negate num2
+    if (result[6] === "--") {
+      result[6] = "-";
+      num2 = -num2;
+    }
+    
+    // If the operator is "/-", convert it to "/", and negate num2
+    if (result[6] === "/-") {
+      result[6] = "/";
+      num2 = -num2;
+    }
+    
+    // If the operator is "+-", convert it to "+", and negate num2
+    if (result[6] === "+-") {
+      result[6] = "+";
+      num2 = -num2;
+    }
+    
+    // If the operator is "*-", convert it to "*", and negate num2
+    if (result[6] === "*-") {
+      result[6] = "*";
+      num2 = -num2;
+    }
+    
+    // Return an object with the two numbers (as decimals) and the operator
+    return {
+      num1: num1,
+      operator: result[6],
+      num2: num2
+    };
+  } else {
+    // Return null if no arithmetic expression was detected
+    return null;
+  }
+}
+
 function lastCharIsNumber(str) {
   // Get the last character of the string
   const lastChar = str[str.length - 1];
@@ -82,13 +129,13 @@ function lastCharIsNumber(str) {
 function performOp(opStr) {
   let lowerDisplay = document.getElementById("lower-display");
   let upperDisplay = document.getElementById("upper-display");
-
+  
   // First check for the case where there are numbers in both displays and the upper display has no
   // operand. This means that the upper display will be treated as an answer, but not included
   // in a new operation. (The user is not required to clear the caluclator with 'AC' to begin
   // a new operation.)
   if ((upperDisplay.textContent.length > 0) && (lowerDisplay.textContent.length > 0)
-       && lastCharIsNumber(upperDisplay.textContent)) {
+  && lastCharIsNumber(upperDisplay.textContent)) {
     console.log('Numbers in both displays but upper number has no operand.');
     console.log(upperDisplay.textContent + lowerDisplay.textContent);
     upperDisplay.textContent = lowerDisplay.textContent +opStr;
@@ -106,7 +153,7 @@ function performOp(opStr) {
       upperDisplay.textContent = result + opStr;
       lowerDisplay.textContent = "";
     }
-  // check if there is a number in only the upper display
+    // check if there is a number in only the upper display
   } else if ((upperDisplay.textContent.length > 0) && (lowerDisplay.textContent.length === 0)) {
     console.log('Numbers in only upper display.');
     if (lastCharIsNumber(upperDisplay.textContent)) {
@@ -132,6 +179,74 @@ function validateDisplays(ud, ld) {
   }
   if (ld.textContent.length > LOWER_DISPLAY_LENGTH) {
     ld.textContent = ldNum.toExponential(LOWER_DISPLAY_LENGTH - 7);
+  }
+}
+
+function stripNumber(num) {
+  // Convert the number to a string
+  num = num.toString();
+  // Remove the negative sign if it exists
+  num = num.replace(/-/g, '');
+  // Remove any non-numeric characters from the final digit
+  num = num.replace(/[^0-9]/g, '');
+  // Convert the string back to a number
+  num = Number(num);
+  return num;
+}
+
+
+function handlePercent(ud,ld) {
+  // if there is an operand in only the upper display and it has no operator then return that operand/100
+  if (((ud.textContent.length > 0) && (ld.textContent.length === 0)) 
+  && lastCharIsNumber(ud.textContent)) {
+    ud.textContent = ud.textContent / 100;
+    
+  } 
+  // if there is an operand in only the upper diplay and it has a trailing operator then do nothing (ignore)
+  else if (((ud.textContent.length > 0) && (ld.textContent.length === 0)) 
+  && (lastCharIsNumber(ud.textContent) === false)) {
+    // do nothing
+  }
+  // if there is an operand in only the lower display and it has no operator then return that operand/100
+  else if (((ud.textContent.length === 0) && (ld.textContent.length > 0))
+  && (lastCharIsNumber(ud.textContent) === false)) {
+    ld.textContent = ld.textContent / 100;
+  }
+  // if there is an operand in only the lower diplay and it has a trailing operator then do nothing (ignore)
+  else if (((ud.textContent.length === 0) && (ld.textContent.length > 0)) 
+  && lastCharIsNumber(ld.textContent)){
+    // do nothing
+  }
+  
+  // if there is an operand in both displays then ....
+  else if ((ud.textContent.length > 0) && (ld.textContent.length > 0)) {
+    console.log('PERCENT: operand in both displays');
+    //  if the upper operand has no trailing operator then multiply the lower operand by 1/100 and move it to
+    //  the upper display. Clear the lower display
+    if (lastCharIsNumber(ud.textContent)) {
+      ud.textContent = ld.textContent / 100;
+      ld.textContent = "";
+    } else if (lastCharIsNumber(ud.textContent) === false) {
+      console.log('PERCENT: operand in both displays. and upper has a trailing operator');
+      //  if the upper operand has a trailing operator (and it is + or -) then change the lower operand to
+      //  (the upper operand * (lower operand/100)
+      switch (ud.textContent.charAt(ud.textContent.length - 1)) {
+        case '+':
+        case '-':
+        console.log('found a + or -');
+        ld.textContent = (stripNumber(ud.textContent) * (ld.textContent/100));
+        validateDisplays(ud, ld);
+        break;
+        //  if the upper operand has a trailing operator (and it is / or *) then change the lower operand to
+        //  its value/100
+        case '/':
+        case '*':
+        console.log('found a / or *');
+        ld.textContent = ld.textContent / 100;
+        validateDisplays(ud, ld);
+        break;
+      }
+    }
   }
 }
 
@@ -192,6 +307,7 @@ function setupButtons() {
         performOp('-');
         break;
         case 'percent':
+        handlePercent(upperDisplay,lowerDisplay);
         break;
         case 'zero':
         if ((lowerDisplay.textContent.length < 13) && (lowerDisplay.textContent.length > 0)) lowerDisplay.textContent += "0";
