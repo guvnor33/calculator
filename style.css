@@ -33,6 +33,7 @@ body {
     width: 270px;
     border-radius: 8px;
     background-color: rgb(5, 52, 105);
+    filter: drop-shadow(2px 15px 12px grey);
 }
 
 .display-container {
